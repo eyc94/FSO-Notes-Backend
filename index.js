@@ -4,8 +4,8 @@ const cors = require('cors');
 const app = express();
 const Note = require('./models/note');
 
-app.use(express.json());
 app.use(express.static('build'));
+app.use(express.json());
 app.use(cors());
 
 const requestLogger = (request, response, next) => {
