@@ -63,9 +63,13 @@ app.post('/api/notes', (request, response, next) => {
         date: new Date(),
     });
 
-    note.save()
+    note
+        .save()
         .then(savedNote => {
-            response.json(savedNote);
+            return savedNote.toJSON();
+        })
+        .then(savedAndFormattedNote => {
+            response.json(savedAndFormattedNote);
         })
         .catch(error => next(error));
 });
