@@ -37,6 +37,7 @@ module.exports = {
                 'before': true,
                 'after': true
             }
-        ]
+        ],
+        'no-console': 0
     }
 };
