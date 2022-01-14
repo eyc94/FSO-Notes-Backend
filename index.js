@@ -1,10 +1,3 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-// const app = express();
-
-
-
 // Start New.
 const app = require('./app');   // The actual Express application.
 const http = require('http');
@@ -19,10 +12,6 @@ server.listen(config.PORT, () => {
 // End New.
 
 
-app.use(express.static('build'));
-app.use(express.json());
-app.use(cors());
-
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method);
     console.log('Path:  ', request.path);
@@ -31,14 +20,12 @@ const requestLogger = (request, response, next) => {
     next();
 };
 
-app.use(requestLogger);
 
 const unknownEndpoint = (request, response) => {
     console.log('error');
     response.status(404).send({ error: 'unknown endpoint' });
 };
 
-app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
     console.error(error.message);
@@ -51,5 +38,3 @@ const errorHandler = (error, request, response, next) => {
 
     next(error);
 };
-
-app.use(errorHandler);
