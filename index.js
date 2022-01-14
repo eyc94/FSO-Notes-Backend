@@ -1,7 +1,25 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const app = express();
+// const app = express();
+
+
+
+// Start New.
+const app = require('./app');   // The actual Express application.
+const http = require('http');
+const config = require('./utils/config');
+const logger = require('./utils/logger');
+
+const server = http.createServer(app);
+
+server.listen(config.PORT, () => {
+    logger.info(`Server running on port ${config.PORT}`);
+});
+// End New.
+
+
+
 const Note = require('./models/note');
 
 app.use(express.static('build'));
