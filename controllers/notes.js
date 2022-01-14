@@ -1,4 +1,4 @@
-// Import express's Router.
+// Create a new router object.
 const notesRouter = require('express').Router();
 // Import file that connects to MongoDB and creates a Mongoose schema and model.
 const Note = require('../models/note');
@@ -60,4 +60,5 @@ notesRouter.put('/:id', (request, response, next) => {
         .catch(error => next(error));
 });
 
+// Export router to be available to anyone who imports it.
 module.exports = notesRouter;
