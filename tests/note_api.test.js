@@ -90,7 +90,7 @@ test('a note can be deleted', async () => {
     const noteToDelete = notesAtStart[0];
 
     await api
-        .delete(`/api/notes/${noteToDelete}`)
+        .delete(`/api/notes/${noteToDelete.id}`)
         .expect(204);
 
     const notesAtEnd = await helper.notesInDb();
