@@ -102,22 +102,24 @@ describe('addition of a new note', () => {
     });
 });
 
-test('a note can be deleted', async () => {
-    const notesAtStart = await helper.notesInDb();
-    const noteToDelete = notesAtStart[0];
+describe('deletion of a note', () => {
+    test('succeeds with status code 204 if id is invalid', async () => {
+        const notesAtStart = await helper.notesInDb();
+        const noteToDelete = notesAtStart[0];
 
-    await api
-        .delete(`/api/notes/${noteToDelete.id}`)
-        .expect(204);
+        await api
+            .delete(`/api/notes/${noteToDelete.id}`)
+            .expect(204);
 
-    const notesAtEnd = await helper.notesInDb();
+        const notesAtEnd = await helper.notesInDb();
 
-    expect(notesAtEnd).toHaveLength(
-        helper.initialNotes.length - 1
-    );
+        expect(notesAtEnd).toHaveLength(
+            helper.initialNotes.length - 1
+        );
 
-    const contents = notesAtEnd.map(r => r.content);
-    expect(contents).not.toContain(noteToDelete.content);
+        const contents = notesAtEnd.map(r => r.content);
+        expect(contents).not.toContain(noteToDelete.content);
+    });
 });
 
 afterAll(() => {
