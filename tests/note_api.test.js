@@ -65,39 +65,41 @@ describe('viewing a specific note', () => {
     });
 });
 
-test('a valid note can be added', async () => {
-    const newNote = {
-        content: 'async/await simplifies making async calls',
-        important: true
-    };
+describe('addition of a new note', () => {
+    test('succeeds with valid data', async () => {
+        const newNote = {
+            content: 'async/await simplifies making async calls',
+            important: true
+        };
 
-    await api
-        .post('/api/notes')
-        .send(newNote)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
+        await api
+            .post('/api/notes')
+            .send(newNote)
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
 
-    const notesAtEnd = await helper.notesInDb();
-    expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
+        const notesAtEnd = await helper.notesInDb();
+        expect(notesAtEnd).toHaveLength(helper.initialNotes.length + 1);
 
-    const contents = notesAtEnd.map(n => n.content);
-    expect(contents).toContain(
-        'async/await simplifies making async calls'
-    );
-});
+        const contents = notesAtEnd.map(n => n.content);
+        expect(contents).toContain(
+            'async/await simplifies making async calls'
+        );
+    });
 
-test('note without content is not added', async () => {
-    const newNote = {
-        important: true
-    };
+    test('fails with status code 400 if data invalid', async () => {
+        const newNote = {
+            important: true
+        };
 
-    await api
-        .post('/api/notes')
-        .send(newNote)
-        .expect(400);
+        await api
+            .post('/api/notes')
+            .send(newNote)
+            .expect(400);
 
-    const notesAtEnd = await helper.notesInDb();
-    expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
+        const notesAtEnd = await helper.notesInDb();
+        expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
+    });
 });
 
 test('a note can be deleted', async () => {
