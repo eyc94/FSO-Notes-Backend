@@ -36,6 +36,35 @@ describe('when there is initially some notes saved', () => {
     });
 });
 
+describe('viewing a specific note', () => {
+    test('succeeds with a valid id', async () => {
+        const notesAtStart = await helper.notesInDb();
+        const noteToView = notesAtStart[0];
+        const resultNote = await api
+            .get(`/api/notes/${noteToView.id}`)
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
+
+        const processedNoteToView = JSON.parse(JSON.stringify(noteToView));
+        expect(resultNote.body).toEqual(processedNoteToView);
+    });
+
+    test('fails with statuscode 404 if note does not exist', async () => {
+        const validNonexistingId = await helper.nonExistingId();
+        console.log(validNonexistingId);
+        await api
+            .get(`/api/notes/${validNonexistingId}`)
+            .expect(404);
+    });
+
+    test('fails with statuscode 400 id is invalid', async () => {
+        const invalidId = '5a3d5da59070081a82a3445';
+        await api
+            .get(`/api/notes/${invalidId}`)
+            .expect(400);
+    });
+});
+
 test('a valid note can be added', async () => {
     const newNote = {
         content: 'async/await simplifies making async calls',
@@ -69,20 +98,6 @@ test('note without content is not added', async () => {
 
     const notesAtEnd = await helper.notesInDb();
     expect(notesAtEnd).toHaveLength(helper.initialNotes.length);
-});
-
-test('a specific note can be viewed', async () => {
-    const notesAtStart = await helper.notesInDb();
-
-    const noteToView = notesAtStart[0];
-
-    const resultNote = await api
-        .get(`/api/notes/${noteToView.id}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-    const processedNoteToView = JSON.parse(JSON.stringify(noteToView));
-    expect(resultNote.body).toEqual(processedNoteToView);
 });
 
 test('a note can be deleted', async () => {
