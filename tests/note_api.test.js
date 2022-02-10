@@ -7,40 +7,33 @@ const api = supertest(app);
 
 const Note = require('../models/note');
 
+
 beforeEach(async () => {
     await Note.deleteMany({});
-
-    for (let note of helper.initialNotes) {
-        let noteObject = new Note(note);
-        await noteObject.save();
-    }
-
-    // -- Advanced method --
-    // const noteObjects = helper.initialNotes
-    //     .map(note => new Note(note));
-    // const promiseArray = noteObjects.map(note => note.save());
-    // await Promise.all(promiseArray);
+    await Note.insertMany(helper.initialNotes);
 });
 
-test('notes are returned as json', async () => {
-    await api
-        .get('/api/notes')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-}, 100000);
+describe('when there is initially some notes saved', () => {
+    test('notes are returned as json', async () => {
+        await api
+            .get('/api/notes')
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
+    });
 
-test('all notes are returned', async () => {
-    const response = await api.get('/api/notes');
-    expect(response.body).toHaveLength(helper.initialNotes.length);
-});
+    test('all notes are returned', async () => {
+        const response = await api.get('/api/notes');
+        expect(response.body).toHaveLength(helper.initialNotes.length);
+    });
 
-test('a specific note is within the returned notes', async () => {
-    const response = await api.get('/api/notes');
+    test('a specific note is within the returned notes', async () => {
+        const response = await api.get('/api/notes');
 
-    const contents = response.body.map(r => r.content);
-    expect(contents).toContain(
-        'Browser can execute only Javascript'
-    );
+        const contents = response.body.map(r => r.content);
+        expect(contents).toContain(
+            'Browser can execute only Javascript'
+        );
+    });
 });
 
 test('a valid note can be added', async () => {
