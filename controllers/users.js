@@ -18,4 +18,4 @@ usersRouter.post('/', async (request, response) => {
     response.json(savedUser);
 });
 
-module.exports = userRouter;
+module.exports = usersRouter;
